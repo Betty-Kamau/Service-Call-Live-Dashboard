@@ -2,6 +2,23 @@ import streamlit as st
 import pyodbc
 import pandas as pd
 from datetime import datetime
+import pyodbc
+import json
+from cryptography.fernet import Fernet
+
+# Load key
+with open("secret.key", "rb") as f:
+    key = f.read()
+cipher = Fernet(key)
+
+# Load encrypted credentials
+with open("credentials.json", "r") as f:
+    creds = json.load(f)
+
+# Decrypt credentials
+username = cipher.decrypt(creds["username"].encode()).decode()
+password = cipher.decrypt(creds["password"].encode()).decode()
+
 
 st.set_page_config(page_title="Live MySQL Dashboard", layout="wide")
 
@@ -50,9 +67,9 @@ st.title("SERVICE CALL DASHBOARD")
 # ODBC connection
 def get_connection():
     return pyodbc.connect(
-        "DSN=CRM - ODBC Connector;"
-        "UID=hive_user;"
-        "PWD=Cargen@2026;"
+        f"DSN=CRM - ODBC Connector;"
+        f"UID={username};"
+        f"PWD={password};"
     )
 
 # Live data fetch
