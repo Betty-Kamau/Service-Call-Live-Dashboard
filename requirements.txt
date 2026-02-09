@@ -1,0 +1,7 @@
+streamlit==1.54.0
+pyodbc
+pandas
+numpy
+cryptography
+sqlalchemy
+psycopg2-binary 
